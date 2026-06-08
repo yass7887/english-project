@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IngénieurFrance — Find Your Path</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a0f2e;
+    --ink: #111827;
+    --cream: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --red: #c1392b;
+    --blue: #1a3a6b;
+    --gray: #6b7280;
+    --light: #f9f8f5;
+    --white: #ffffff;
+    --border: rgba(201,168,76,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.07) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .flag-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 2rem;
+    animation: fadeDown 0.8s ease both;
+  }
+  .flag-bar span {
+    display: block;
+    width: 36px; height: 5px;
+    border-radius: 3px;
+  }
+  .flag-bar .bleu { background: #002395; }
+  .flag-bar .blanc { background: #EDEDED; }
+  .flag-bar .rouge { background: #ED2939; }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    animation: fadeDown 0.9s ease 0.1s both;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 900;
+    color: var(--white);
+    text-align: center;
+    line-height: 1.05;
+    animation: fadeDown 1s ease 0.2s both;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    max-width: 520px;
+    text-align: center;
+    color: rgba(255,255,255,0.55);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-top: 1.5rem;
+    animation: fadeDown 1s ease 0.35s both;
+  }
+
+  .hero-cta {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeDown 1s ease 0.5s both;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    padding: 0.9rem 2.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    font-weight: 500;
+    transition: all 0.25s;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.35); }
+
+  .btn-outline {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.9rem 2.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.25s;
+    text-decoration: none;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.3);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: fadeIn 2s ease 1.2s both;
+  }
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, rgba(201,168,76,0.6), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    background: var(--blue);
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    flex: 1;
+    min-width: 160px;
+    max-width: 280px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 7rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--navy);
+    margin-bottom: 1.5rem;
+  }
+  .section-body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--gray);
+  }
+  .about-visual {
+    background: var(--navy);
+    border-radius: 4px;
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-visual::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(201,168,76,0.2), transparent 70%);
+  }
+  .about-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  .about-item:last-child { margin-bottom: 0; }
+  .about-icon {
+    width: 40px; height: 40px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .about-item h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+  .about-item p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.6;
+  }
+
+  /* ── QUIZ ── */
+  #quiz {
+    background: var(--navy);
+    padding: 7rem 2rem;
+  }
+  .quiz-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .quiz-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+  .quiz-header .section-title { color: var(--white); }
+  .quiz-header .section-body { color: rgba(255,255,255,0.45); max-width: 480px; margin: 0 auto; }
+
+  /* Step indicator */
+  .steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 3.5rem;
+  }
+  .step-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.3);
+    transition: all 0.3s;
+  }
+  .step-dot.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .step-dot.done {
+    background: rgba(201,168,76,0.2);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .step-line {
+    width: 40px; height: 1px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  /* Question card */
+  .quiz-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 3rem;
+  }
+
+  .q-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .q-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 2rem;
+    line-height: 1.3;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .option-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .option-btn:hover {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.08);
+  }
+  .option-btn.selected {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.15);
+  }
+  .option-icon { font-size: 1.3rem; }
+  .option-text {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.4;
+  }
+  .option-btn.selected .option-text { color: var(--white); }
+
+  .quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  .btn-back {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.4);
+    padding: 0.7rem 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s;
+  }
+  .btn-back:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.3); }
+  .btn-next {
+    background: var(--gold);
+    border: none;
+    color: var(--navy);
+    padding: 0.8rem 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    font-weight: 500;
+    transition: all 0.25s;
+  }
+  .btn-next:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-next:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+  /* ── RESULTS ── */
+  #results {
+    display: none;
+    padding: 7rem 2rem;
+    background: var(--light);
+  }
+  .results-wrap { max-width: 1000px; margin: 0 auto; }
+  .results-header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+  .profile-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--navy);
+    color: var(--gold);
+    border-radius: 100px;
+    padding: 0.5rem 1.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .path-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 5rem;
+  }
+  .path-card {
+    background: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: all 0.25s;
+    cursor: pointer;
+  }
+  .path-card:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+  .card-top {
+    height: 8px;
+  }
+  .card-body {
+    padding: 2rem;
+  }
+  .card-match {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .match-pct {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.2rem;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.6rem;
+  }
+  .card-desc {
+    font-size: 0.87rem;
+    color: var(--gray);
+    line-height: 1.65;
+    margin-bottom: 1.2rem;
+  }
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .tag {
+    background: rgba(26,58,107,0.07);
+    color: var(--blue);
+    border-radius: 3px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.72rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* School section */
+  .schools-section { margin-bottom: 5rem; }
+  .schools-section .section-title { color: var(--navy); margin-bottom: 2.5rem; }
+
+  .schools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .school-card {
+    background: var(--white);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 6px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+  }
+  .school-card:hover { border-color: var(--gold); }
+  .school-rank {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gray);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .school-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.4rem;
+  }
+  .school-city {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-bottom: 0.8rem;
+  }
+  .school-type {
+    display: inline-block;
+    background: rgba(193,57,43,0.08);
+    color: var(--red);
+    border-radius: 3px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.68rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em;
+  }
+
+  /* Roadmap */
+  .roadmap { margin-bottom: 5rem; }
+  .roadmap .section-title { color: var(--navy); margin-bottom: 2.5rem; }
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--gold), var(--blue));
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+  .tl-dot {
+    position: absolute;
+    left: -30px; top: 4px;
+    width: 16px; height: 16px;
+    background: var(--white);
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+  }
+  .tl-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .tl-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.3rem;
+  }
+  .tl-desc {
+    font-size: 0.87rem;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  /* Tips */
+  .tips-section {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 3rem;
+    margin-bottom: 2rem;
+  }
+  .tips-section .section-title { color: var(--white); margin-bottom: 2rem; }
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+  .tip-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 6px;
+    padding: 1.5rem;
+  }
+  .tip-icon { font-size: 1.5rem; margin-bottom: 0.8rem; }
+  .tip-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .tip-text {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.65;
+  }
+
+  .restart-btn {
+    display: block;
+    margin: 0 auto;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 0.9rem 2.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.25s;
+  }
+  .restart-btn:hover { background: var(--gold); color: var(--navy); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .footer-logo span { color: var(--gold); }
+  .footer-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.25);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .footer-note {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.2);
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 0.8; transform: scaleY(1.1); }
+  }
+
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    #about { grid-template-columns: 1fr; gap: 3rem; }
+    .options-grid { grid-template-columns: 1fr; }
+    .quiz-card { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="flag-bar">
+    <span class="bleu"></span>
+    <span class="blanc"></span>
+    <span class="rouge"></span>
+  </div>
+  <p class="hero-label">Engineering in France · Orientation Guide</p>
+  <h1 class="hero-title">Become an<br><em>Ingénieur</em><br>in France</h1>
+  <p class="hero-sub">Discover your ideal engineering path. Tell us what drives you — we'll map out the schools, programs, and steps to get you there.</p>
+  <div class="hero-cta">
+    <a href="#quiz" class="btn-primary">Start the Quiz →</a>
+    <a href="#about" class="btn-outline">Learn More</a>
+  </div>
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<!-- ══ STATS ══ -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <span class="stat-num">200+</span>
+    <span class="stat-label">Grandes Écoles</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">95%</span>
+    <span class="stat-label">Employment rate</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">€42k</span>
+    <span class="stat-label">Average starting salary</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">5 yrs</span>
+    <span class="stat-label">Typical degree length</span>
+  </div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="fade-in-up">
+    <p class="section-tag">About French Engineering</p>
+    <h2 class="section-title">A world-class<br>tradition of excellence</h2>
+    <p class="section-body">
+      France boasts one of the most rigorous and prestigious engineering education systems in the world. The Grandes Écoles d'Ingénieurs have been shaping technical leaders for over two centuries — from aerospace to AI, energy to civil infrastructure.
+      <br><br>
+      Whether you pursue a Classe Préparatoire path or enter through a university IUT, French engineering degrees are recognised globally and open doors across every sector.
+    </p>
+  </div>
+  <div class="about-visual fade-in-up">
+    <div class="about-item">
+      <div class="about-icon">🏛️</div>
+      <div>
+        <h4>Grandes Écoles System</h4>
+        <p>Selective institutions offering a 5-year engineering diploma recognised at Master's level.</p>
+      </div>
+    </div>
+    <div class="about-item">
+      <div class="about-icon">📐</div>
+      <div>
+        <h4>CPGE — Prépa</h4>
+        <p>Two intense years of maths & sciences before competitive entrance exams (concours).</p>
+      </div>
+    </div>
+    <div class="about-item">
+      <div class="about-icon">🌍</div>
+      <div>
+        <h4>International Recognition</h4>
+        <p>CTI-accredited diplomas are the French equivalent of a European engineering Masters.</p>
+      </div>
+    </div>
+    <div class="about-item">
+      <div class="about-icon">🔬</div>
+      <div>
+        <h4>Research & Industry</h4>
+        <p>Strong ties with labs like CNRS, CEA and companies like Airbus, Total, and Capgemini.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ QUIZ ══ -->
+<section id="quiz">
+  <div class="quiz-wrap">
+    <div class="quiz-header">
+      <p class="section-tag">Your Orientation</p>
+      <h2 class="section-title">Find Your Path</h2>
+      <p class="section-body">Answer 4 quick questions and we'll recommend a personalised engineering track, schools, and a roadmap just for you.</p>
+    </div>
+
+    <div class="steps" id="stepIndicator"></div>
+
+    <div class="quiz-card" id="quizCard">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ══ RESULTS ══ -->
+<section id="results">
+  <div class="results-wrap">
+    <div class="results-header fade-in-up">
+      <div class="profile-badge" id="profileBadge">⚙️ Your Profile</div>
+      <h2 class="section-title" id="resultsTitle" style="color:var(--navy)">Your Engineering Path</h2>
+      <p style="color:var(--gray); max-width:520px; margin:0 auto; line-height:1.7; font-size:1rem;" id="resultsSubtitle"></p>
+    </div>
+
+    <div id="pathCards" class="path-cards fade-in-up"></div>
+
+    <div class="schools-section fade-in-up">
+      <h3 class="section-title">Recommended Schools</h3>
+      <div id="schoolsGrid" class="schools-grid"></div>
+    </div>
+
+    <div class="roadmap fade-in-up">
+      <h3 class="section-title">Your Roadmap</h3>
+      <div id="timeline" class="timeline"></div>
+    </div>
+
+    <div class="tips-section fade-in-up">
+      <h3 class="section-title">Tips & Resources</h3>
+      <div id="tipsGrid" class="tips-grid"></div>
+    </div>
+
+    <button class="restart-btn" onclick="restartQuiz()">↩ Start Over</button>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-logo">Ingénieur<span>France</span></div>
+  <div class="footer-sub">Student Orientation · English Project</div>
+  <p class="footer-note">This guide was created as an English school project to help students explore engineering careers and education in France.</p>
+</footer>
+
+<script>
+// ══ DATA ══
+const questions = [
+  {
+    label: "Question 1 of 4",
+    title: "What excites you most?",
+    options: [
+      { icon: "🚀", text: "Building things that push the limits of technology", value: "tech" },
+      { icon: "🌱", text: "Solving environmental and sustainability challenges", value: "env" },
+      { icon: "💻", text: "Creating software, algorithms and digital systems", value: "digital" },
+      { icon: "⚕️", text: "Improving people's health and quality of life", value: "bio" },
+    ]
+  },
+  {
+    label: "Question 2 of 4",
+    title: "How do you prefer to work?",
+    options: [
+      { icon: "🔭", text: "Research labs — deep dives into complex problems", value: "research" },
+      { icon: "🏗️", text: "On-site projects — hands-on and practical", value: "field" },
+      { icon: "🖥️", text: "At a screen — designing, modelling, coding", value: "desk" },
+      { icon: "🤝", text: "In teams — managing projects and people", value: "team" },
+    ]
+  },
+  {
+    label: "Question 3 of 4",
+    title: "What kind of impact do you want to have?",
+    options: [
+      { icon: "🌍", text: "Global — space, energy, climate or infrastructure", value: "global" },
+      { icon: "🏙️", text: "Local — urban planning, construction, transport", value: "local" },
+      { icon: "💡", text: "Innovative — start something new, disrupt industries", value: "innov" },
+      { icon: "📊", text: "Strategic — lead technical decisions in large companies", value: "strat" },
+    ]
+  },
+  {
+    label: "Question 4 of 4",
+    title: "Where do you see yourself after graduating?",
+    options: [
+      { icon: "✈️", text: "Working abroad for international companies", value: "abroad" },
+      { icon: "🇫🇷", text: "Building a career in France, close to home", value: "france" },
+      { icon: "🔬", text: "Doing a PhD — pushing the frontiers of science", value: "phd" },
+      { icon: "🧑‍💼", text: "Launching my own startup or consultancy", value: "startup" },
+    ]
+  }
+];
+
+// ══ PROFILES ══
+const profiles = {
+  aerospace: {
+    badge: "🚀 Aerospace & Mechanical",
+    title: "Aerospace & Mechanical Engineering",
+    subtitle: "You're drawn to pushing the boundaries of what's physically possible. France is home to world-class aerospace and mechanical engineering schools with direct ties to Airbus, Safran, and the ESA.",
+    paths: [
+      { color: "#1a3a6b", match: "97% Match", pct: "97%", title: "Aerospace Engineering", desc: "Design aircraft, rockets, and satellites. Work with propulsion, aerodynamics, and structural mechanics.", tags: ["Aerodynamics", "Propulsion", "CAD", "Structures"] },
+      { color: "#c9a84c", match: "85% Match", pct: "85%", title: "Mechanical Engineering", desc: "Broad field covering energy systems, manufacturing, robotics and industrial design.", tags: ["Thermodynamics", "Robotics", "Manufacturing"] },
+      { color: "#c1392b", match: "72% Match", pct: "72%", title: "Materials Science", desc: "Develop new materials for extreme environments — heat shields, composites, smart alloys.", tags: ["Composites", "Metallurgy", "R&D"] },
+    ],
+    schools: [
+      { name: "ISAE-SUPAERO", city: "Toulouse", rank: "#1 in Aerospace", type: "Grande École" },
+      { name: "École Polytechnique", city: "Palaiseau", rank: "Top 1 Overall", type: "Grande École" },
+      { name: "ENSMA", city: "Poitiers", rank: "#3 Aerospace", type: "Grande École" },
+      { name: "Arts et Métiers", city: "Paris / Multi-campus", rank: "Top Mechanical", type: "Grande École" },
+    ],
+    timeline: [
+      { year: "Year 1–2 (Bac)", title: "Scientific Baccalauréat", desc: "Focus on Maths, Physics and Sciences. Aim for mention Très Bien." },
+      { year: "Year 3–4 (CPGE)", title: "Classe Préparatoire — MPSI/MP", desc: "Two years of intensive maths and physics at a prépa to prepare for the concours entrance exams." },
+      { year: "Year 5–7 (École)", title: "Grande École d'Ingénieurs", desc: "3 years at your school. Internships in industry, project work, and specialisation in your chosen field." },
+      { year: "Year 8+ (Career)", title: "Engineer / PhD / Startup", desc: "Join Airbus, Safran, or the ESA. Or continue with a PhD at a CNRS lab, or launch your own deep-tech venture." },
+    ],
+    tips: [
+      { icon: "📚", title: "Key subjects", text: "Excel in Maths and Physics at Lycée. Terminale Spé Maths + Physique-Chimie is essential." },
+      { icon: "🏆", title: "Concours prep", text: "The entrance exams (Mines, Centrale, X) are highly competitive. Start CPGE at a strong prépa in Paris or Lyon." },
+      { icon: "🌍", title: "Go to Toulouse", text: "Toulouse is France's 'aerospace capital'. ISAE-SUPAERO sits next door to Airbus HQ — internships are easy to get." },
+      { icon: "💻", title: "Learn CAD early", text: "Start learning CATIA or SolidWorks before school. It'll set you apart in your first internship." },
+    ]
+  },
+  digital: {
+    badge: "💻 Digital & Computer Science",
+    title: "Computer Science & Digital Engineering",
+    subtitle: "You thrive in the world of code, data and systems. France's top engineering schools have built world-leading CS departments, and the French Tech startup ecosystem is booming.",
+    paths: [
+      { color: "#1a3a6b", match: "96% Match", pct: "96%", title: "Computer Science & AI", desc: "Machine learning, algorithms, data systems, and software engineering at the highest level.", tags: ["Python", "ML", "Algorithms", "Cloud"] },
+      { color: "#c9a84c", match: "88% Match", pct: "88%", title: "Cybersecurity", desc: "Protect critical systems and data. An exploding field with massive demand in France and globally.", tags: ["Networks", "Cryptography", "Security"] },
+      { color: "#c1392b", match: "75% Match", pct: "75%", title: "Data Science & Analytics", desc: "Turn raw data into strategic insights. Work with companies, hospitals, or government agencies.", tags: ["Statistics", "Big Data", "Visualisation"] },
+    ],
+    schools: [
+      { name: "École Polytechnique", city: "Palaiseau", rank: "Top 1 Overall", type: "Grande École" },
+      { name: "CentraleSupélec", city: "Gif-sur-Yvette", rank: "Top 3 CS", type: "Grande École" },
+      { name: "EPITA", city: "Paris / Lyon", rank: "#1 Specialist CS", type: "Grande École" },
+      { name: "Télécom Paris", city: "Paris", rank: "Top Telecom & AI", type: "Grande École" },
+    ],
+    timeline: [
+      { year: "Year 1–2 (Bac)", title: "Scientific Baccalauréat + NSI", desc: "Maths + NSI (Numérique et Sciences Informatiques) is the ideal combo. Code in your free time." },
+      { year: "Year 3–4 (CPGE / Licence)", title: "CPGE or Licence Informatique", desc: "MPSI prépa for top schools, or a Licence Info at a university for a more accessible route." },
+      { year: "Year 5–7 (École)", title: "Grande École or Master", desc: "Deep dive into your specialism. Do internships in startups, GAFAM labs or French tech companies." },
+      { year: "Year 8+", title: "Engineer / PhD / Entrepreneur", desc: "Join a French unicorn (Mistral, Doctolib), work at Google DeepMind Paris, or start your own tech company." },
+    ],
+    tips: [
+      { icon: "💡", title: "Start coding now", text: "Learn Python, then explore HTML/CSS and algorithms. Platforms like France-IOI are excellent for beginners." },
+      { icon: "🧠", title: "AI is the future", text: "France has a national AI strategy and Paris is one of Europe's leading AI research hubs. Get ahead early." },
+      { icon: "🚀", title: "French Tech ecosystem", text: "Station F in Paris is the world's largest startup campus. Network early and build side projects." },
+      { icon: "🔐", title: "Cybersecurity demand", text: "ANSSI (France's cybersecurity agency) and dozens of firms are hiring. Pôle d'Excellence Cyber in Brittany is growing fast." },
+    ]
+  },
+  environment: {
+    badge: "🌱 Energy & Environment",
+    title: "Environmental & Energy Engineering",
+    subtitle: "You want to build a sustainable future. France is at the forefront of nuclear energy, renewables, and environmental technology — offering unique opportunities for eco-engineers.",
+    paths: [
+      { color: "#2d6a4f", match: "95% Match", pct: "95%", title: "Energy Engineering", desc: "Nuclear, renewables, hydrogen, smart grids — France needs engineers to power the green transition.", tags: ["Nuclear", "Solar", "Grid", "Hydrogen"] },
+      { color: "#c9a84c", match: "87% Match", pct: "87%", title: "Environmental Engineering", desc: "Water treatment, waste management, pollution control and ecological restoration.", tags: ["Water", "Soil", "Pollution", "Ecology"] },
+      { color: "#1a3a6b", match: "74% Match", pct: "74%", title: "Civil & Infrastructure", desc: "Design resilient cities and sustainable transport systems for a changing climate.", tags: ["Urban", "Transport", "Climate"] },
+    ],
+    schools: [
+      { name: "École des Ponts ParisTech", city: "Paris", rank: "#1 Civil/Env", type: "Grande École" },
+      { name: "INSA Lyon", city: "Lyon", rank: "Top Energy", type: "INSA Network" },
+      { name: "Mines Paris", city: "Paris", rank: "Top Energy & Resources", type: "Grande École" },
+      { name: "École Centrale Nantes", city: "Nantes", rank: "Top Marine & Energy", type: "Grande École" },
+    ],
+    timeline: [
+      { year: "Year 1–2 (Bac)", title: "Bac S — SVT or Physique", desc: "Sciences de la vie et de la Terre (SVT) + Physique-Chimie give you a strong environmental science base." },
+      { year: "Year 3–4 (CPGE / Prépa)", title: "CPGE PCSI or BCPST", desc: "PCSI/PC for energy and civil routes. BCPST for more biological/environmental focus. Both lead to excellent schools." },
+      { year: "Year 5–7 (École)", title: "Specialisation in Energy or Environment", desc: "Work on real-world projects: solar farm optimisation, nuclear plant simulations, water treatment design." },
+      { year: "Year 8+", title: "EDF, ENGIE, or NGO", desc: "Join EDF Renewables, Veolia, ENGIE, or the ADEME agency — or work with international organisations like the UN Environment Programme." },
+    ],
+    tips: [
+      { icon: "⚡", title: "Nuclear is key in France", text: "France gets ~70% of its electricity from nuclear. Understanding nuclear engineering is a huge asset in the French job market." },
+      { icon: "🌿", title: "Renewable energy boom", text: "The French government is massively investing in offshore wind, solar, and hydrogen. These sectors are actively hiring young engineers." },
+      { icon: "🏗️", title: "Go to Nantes or Lyon", text: "These cities have strong ecosystems in sustainable construction and energy. Great for internships and networking." },
+      { icon: "🌐", title: "Think international", text: "Environmental engineering is inherently global. French engineers are highly sought in EU agencies, the UN, and development banks." },
+    ]
+  },
+  biomedical: {
+    badge: "⚕️ Biomedical & Health",
+    title: "Biomedical & Health Engineering",
+    subtitle: "You want technology to heal and improve lives. France has world-class medical research institutions and a growing MedTech sector — combining engineering with life sciences.",
+    paths: [
+      { color: "#c1392b", match: "94% Match", pct: "94%", title: "Biomedical Engineering", desc: "Design medical devices, prosthetics, imaging systems, and diagnostic tools.", tags: ["MRI", "Prosthetics", "Sensors", "Imaging"] },
+      { color: "#1a3a6b", match: "82% Match", pct: "82%", title: "Bioinformatics & Health Data", desc: "Apply algorithms and AI to genomics, electronic health records, and drug discovery.", tags: ["Genomics", "Python", "AI", "Pharma"] },
+      { color: "#c9a84c", match: "70% Match", pct: "70%", title: "Chemical & Pharmaceutical Eng.", desc: "Work at the interface of chemistry, biology and manufacturing to develop medicines and treatments.", tags: ["Chemistry", "Biochemistry", "Manufacturing"] },
+    ],
+    schools: [
+      { name: "ESPCI Paris", city: "Paris", rank: "#1 Life Sciences Eng.", type: "Grande École" },
+      { name: "Université Paris Cité", city: "Paris", rank: "Top Biomedical", type: "Université" },
+      { name: "INSA Lyon", city: "Lyon", rank: "Top Biotech", type: "INSA Network" },
+      { name: "Grenoble INP", city: "Grenoble", rank: "Top Health Tech", type: "Grande École" },
+    ],
+    timeline: [
+      { year: "Year 1–2 (Bac)", title: "Bac S — SVT + Physique + Maths", desc: "Build a foundation in biology, chemistry, and mathematics. Consider the 'Santé' specialisation option." },
+      { year: "Year 3–4 (CPGE / L1 Santé)", title: "CPGE BCPST or L1-PASS", desc: "BCPST prépa leads to engineering schools. PASS (Portail Santé) can combine med + engineering tracks." },
+      { year: "Year 5–7 (École / Master)", title: "Biomedical Engineering Diploma", desc: "Projects in hospitals, MedTech labs. Internships with Philips, Siemens Healthineers, or French MedTech startups." },
+      { year: "Year 8+", title: "MedTech Engineer / Researcher", desc: "Join Sanofi, bioMérieux, Guerbet, or a hospital biomedical department. Or pursue a PhD at INSERM or Institut Curie." },
+    ],
+    tips: [
+      { icon: "🧬", title: "French biotech is growing", text: "France ranked 4th globally in life sciences investment in 2023. Lyon and Paris are major European biotech hubs." },
+      { icon: "🏥", title: "Hospital internships matter", text: "Try to secure an internship (stage) at a hospital engineering department. It gives you direct patient-care context." },
+      { icon: "📊", title: "Learn health data skills", text: "Python and R for bioinformatics are increasingly essential. Health AI is one of the fastest-growing sectors in France." },
+      { icon: "🔬", title: "INSERM & Institut Pasteur", text: "Two world-leading French research bodies. PhD positions there are highly prestigious and open international doors." },
+    ]
+  }
+};
+
+// ══ STATE ══
+let current = 0;
+let answers = [];
+
+function getProfile(answers) {
+  const counts = { tech: 0, env: 0, digital: 0, bio: 0 };
+  answers.forEach(a => {
+    if (["tech", "global", "innov", "abroad", "phd"].includes(a)) counts.tech++;
+    if (["env", "local", "field"].includes(a)) counts.env++;
+    if (["digital", "desk", "startup"].includes(a)) counts.digital++;
+    if (["bio", "research", "strat", "france"].includes(a)) counts.bio++;
+  });
+  const max = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+  const map = { tech: 'aerospace', env: 'environment', digital: 'digital', bio: 'biomedical' };
+  return map[max];
+}
+
+function renderSteps() {
+  const ind = document.getElementById('stepIndicator');
+  ind.innerHTML = '';
+  for (let i = 0; i < questions.length; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'step-dot' + (i < current ? ' done' : i === current ? ' active' : '');
+    dot.textContent = i < current ? '✓' : i + 1;
+    ind.appendChild(dot);
+    if (i < questions.length - 1) {
+      const line = document.createElement('div');
+      line.className = 'step-line';
+      ind.appendChild(line);
+    }
+  }
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const selected = answers[current];
+  document.getElementById('quizCard').innerHTML = `
+    <div class="q-label">${q.label}</div>
+    <div class="q-title">${q.title}</div>
+    <div class="options-grid">
+      ${q.options.map(o => `
+        <button class="option-btn${selected === o.value ? ' selected' : ''}" onclick="selectOption('${o.value}')">
+          <span class="option-icon">${o.icon}</span>
+          <span class="option-text">${o.text}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="quiz-nav">
+      <button class="btn-back" onclick="prevQ()" ${current === 0 ? 'style="visibility:hidden"' : ''}>← Back</button>
+      <button class="btn-next" id="nextBtn" onclick="nextQ()" ${!selected ? 'disabled' : ''}>
+        ${current === questions.length - 1 ? 'See My Path →' : 'Next →'}
+      </button>
+    </div>
+  `;
+  renderSteps();
+}
+
+function selectOption(value) {
+  answers[current] = value;
+  renderQuestion();
+}
+
+function nextQ() {
+  if (!answers[current]) return;
+  if (current < questions.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function prevQ() {
+  if (current > 0) { current--; renderQuestion(); }
+}
+
+function showResults() {
+  document.getElementById('quiz').style.display = 'none';
+  const resultsEl = document.getElementById('results');
+  resultsEl.style.display = 'block';
+
+  const profileKey = getProfile(answers);
+  const p = profiles[profileKey];
+
+  document.getElementById('profileBadge').textContent = p.badge;
+  document.getElementById('resultsTitle').textContent = p.title;
+  document.getElementById('resultsSubtitle').textContent = p.subtitle;
+
+  // Path cards
+  document.getElementById('pathCards').innerHTML = p.paths.map(c => `
+    <div class="path-card">
+      <div class="card-top" style="background:${c.color}"></div>
+      <div class="card-body">
+        <div class="card-match">${c.match}</div>
+        <div class="card-title">${c.title}</div>
+        <div class="card-desc">${c.desc}</div>
+        <div class="card-tags">${c.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // Schools
+  document.getElementById('schoolsGrid').innerHTML = p.schools.map(s => `
+    <div class="school-card">
+      <div class="school-rank">${s.rank}</div>
+      <div class="school-name">${s.name}</div>
+      <div class="school-city">📍 ${s.city}</div>
+      <span class="school-type">${s.type}</span>
+    </div>
+  `).join('');
+
+  // Timeline
+  document.getElementById('timeline').innerHTML = p.timeline.map(t => `
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">${t.year}</div>
+      <div class="tl-title">${t.title}</div>
+      <div class="tl-desc">${t.desc}</div>
+    </div>
+  `).join('');
+
+  // Tips
+  document.getElementById('tipsGrid').innerHTML = p.tips.map(t => `
+    <div class="tip-card">
+      <div class="tip-icon">${t.icon}</div>
+      <div class="tip-title">${t.title}</div>
+      <div class="tip-text">${t.text}</div>
+    </div>
+  `).join('');
+
+  resultsEl.scrollIntoView({ behavior: 'smooth' });
+  initObserver();
+}
+
+function restartQuiz() {
+  current = 0; answers = [];
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  renderQuestion();
+  document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ══ INIT ══
+renderQuestion();
+
+// Scroll animations
+function initObserver() {
+  const els = document.querySelectorAll('.fade-in-up');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  els.forEach(el => obs.observe(el));
+}
+initObserver();
+</script>
+</body>
+</html>
